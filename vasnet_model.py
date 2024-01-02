@@ -91,7 +91,7 @@ class DeformableSelfAttention(nn.Module):
         self.output_linear = nn.Linear(in_features=self.output_size, out_features=self.m, bias=False)
 
         self.drop50 = nn.Dropout(0.5)
-        
+
     def forward(self, x):
         n = x.shape[0]  # sequence length
         Q = self.Q(x) * 0.06
@@ -118,21 +118,21 @@ class DeformableSelfAttention(nn.Module):
         y = self.output_linear(y)
         return y, att_weights_, offset
 
+class AdaptiveOffset:
+    def __init__(self, dim, offset_dim):
+        self.model = DeformableAttention(dim=dim, offset_dim=offset_dim)
+
 # Usage example
 if __name__ == "__main__":
-    dim = 1024
-    offset_dim = 1
+    your_dim = 1024  # Replace with your desired value
+    your_offset_dim = 1  # Replace with your desired value
 
-    swin_deformable_attention = SwinDeformableAttention(dim, offset_dim)
-    deformable_attention = DeformableAttention(dim, offset_dim)
+    adaptive_offset = AdaptiveOffset(dim=your_dim, offset_dim=your_offset_dim)  # Pass the arguments
 
-    input_tensor = torch.rand((2, dim, 16, 16))
+    input_tensor = torch.rand((2, your_dim, 16, 16))
 
-    # Swin Deformable Attention
-    swin_output, swin_offset = swin_deformable_attention(input_tensor)
-
-    # Your existing Deformable Attention
-    your_output, your_offset = deformable_attention(input_tensor)
+    # Your Deformable Attention
+    your_output, your_offset = adaptive_offset.model(input_tensor)
 
     print("Swin Deformable Attention Output:", swin_output.shape)
     print("Your Deformable Attention Output:", your_output.shape)
